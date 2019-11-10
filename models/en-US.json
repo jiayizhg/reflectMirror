@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "dynamodb starter",
+            "invocationName": "reflect mirror",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -16,57 +16,127 @@
                     "samples": []
                 },
                 {
-                    "name": "AddMovieIntent",
+                    "name": "PlayVideoIntent",
                     "slots": [
                         {
-                            "name": "MovieName",
-                            "type": "AMAZON.Movie",
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
                             "samples": [
-                                "{MovieName}"
+                                "{WorkoutName}"
                             ]
                         }
                     ],
                     "samples": [
-                        "add {MovieName}",
-                        "add"
+                        "play {WorkoutName}",
+                        "play {WorkoutName} video",
+                        "play the {WorkoutName} video",
+                        "play video",
+                        "play"
                     ]
                 },
                 {
-                    "name": "GetMoviesIntent",
+                    "name": "PauseVideoIntent",
+                    "slots": [
+                        {
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
+                            "samples": [
+                                "{WorkoutName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "pause {WorkoutName}",
+                        "pause {WorkoutName} video",
+                        "pause the {WorkoutName} video",
+                        "pause video",
+                        "pause",
+                        "stop the video",
+                        "stop video",
+                        "stop fast forward"
+                    ]
+                },
+                {
+                    "name": "RestartVideoIntent",
+                    "slots": [
+                        {
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
+                            "samples": [
+                                "{WorkoutName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "restart {WorkoutName}",
+                        "restart {WorkoutName} video",
+                        "restart the {WorkoutName} video",
+                        "restart video",
+                        "restart"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "MorningRoutineIntent",
                     "slots": [],
                     "samples": [
-                        "get my movies"
+                        "Play my morning routine",
+                        "Start my morning routine"
                     ]
                 },
                 {
-                    "name": "RemoveMovieIntent",
+                    "name": "SetMorningRoutineIntent",
                     "slots": [
                         {
-                            "name": "MovieName",
-                            "type": "AMAZON.Movie",
-                            "samples": [
-                                "{MovieName}"
-                            ]
+                            "name": "WorkoutName",
+                            "type": "workoutVideo"
                         }
                     ],
                     "samples": [
-                        "remove {MovieName}",
-                        "remove"
+                        "Set morning routine to {WorkoutName}",
+                        "Set my morning routine to {WorkoutName}"
                     ]
                 }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "workoutVideo",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Kick Boxing",
+                                "synonyms": [
+                                    "kickboxing"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Balance Yoga"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Flow Workout"
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         "dialog": {
             "intents": [
                 {
-                    "name": "AddMovieIntent",
+                    "name": "PlayVideoIntent",
                     "confirmationRequired": false,
                     "prompts": {},
                     "slots": [
                         {
-                            "name": "MovieName",
-                            "type": "AMAZON.Movie",
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -74,24 +144,9 @@
                             }
                         }
                     ]
-                },
-                {
-                    "name": "RemoveMovieIntent",
-                    "confirmationRequired": false,
-                    "prompts": {},
-                    "slots": [
-                        {
-                            "name": "MovieName",
-                            "type": "AMAZON.Movie",
-                            "confirmationRequired": false,
-                            "elicitationRequired": true,
-                            "prompts": {
-                                "elicitation": "Elicit.Slot.1034415917954.788060345760"
-                            }
-                        }
-                    ]
                 }
-            ]
+            ],
+            "delegationStrategy": "SKILL_RESPONSE"
         },
         "prompts": [
             {
@@ -99,7 +154,7 @@
                 "variations": [
                     {
                         "type": "PlainText",
-                        "value": "Which movie would you like to add "
+                        "value": "What workout would you like to do "
                     }
                 ]
             },

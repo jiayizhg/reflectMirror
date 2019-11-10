@@ -5,12 +5,20 @@ const Alexa = require('ask-sdk');
 const dbHelper = require('./helpers/dbHelper');
 const GENERAL_REPROMPT = "What would you like to do?";
 const dynamoDBTableName = "dynamodb-starter";
+
+const BACKGROUND_IMAGE_URL = 'https://s3://reflect-mirror-videos/yoga-2959226_1920.jpg',
+  VIDEO_URL = 'https://s3://reflect-mirror-videos/Yoga - 1059.mp4',
+  VIDEO_TITLE = "Video from pixabay.com",
+  VIDEO_SUBTITLE = "Used under Creative Commons.",
+  TITLE = 'Visual Escape',
+  TEXT = 'A 60-second virtual vacation for your brain. Please relax before the video loads.';
+
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Hello there. What is your favourite movie? You can say add moviename to add your favourite movie or say list my movies to get your favourite movies.';
+    const speechText = 'Hello there. What workout would you like to do today?';
     const repromptText = 'What would you like to do? You can say HELP to get available options';
 
     return handlerInput.responseBuilder
@@ -20,11 +28,11 @@ const LaunchRequestHandler = {
   },
 };
 
-const InProgressAddMovieIntentHandler = {
+const InProgressPlayVideoIIntentHandler = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     return request.type === 'IntentRequest' &&
-      request.intent.name === 'AddMovieIntent' &&
+      request.intent.name === 'PlayVideoInten' &&
       request.dialogState !== 'COMPLETED';
   },
   handle(handlerInput) {
@@ -35,27 +43,27 @@ const InProgressAddMovieIntentHandler = {
   }
 }
 
-const AddMovieIntentHandler = {
+const SetMorningRoutineIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'AddMovieIntent';
+      && handlerInput.requestEnvelope.request.intent.name === 'SetMorningRoutineIntent';
   },
   async handle(handlerInput) {
     const {responseBuilder } = handlerInput;
-    const userID = handlerInput.requestEnvelope.context.System.user.userId; 
     const slots = handlerInput.requestEnvelope.request.intent.slots;
-    const movieName = slots.MovieName.value;
-    return dbHelper.addMovie(movieName, userID)
+    const workout = slots.WorkoutName.value;
+    let command = "morning routine " + workout; 
+    return dbHelper.updateWorkoutCommand(command)
       .then((data) => {
-        const speechText = `You have added movie ${movieName}. You can say add to add another one or remove to remove movie`;
+        const speechText = `Morning routine set to ${workout}.`;
         return responseBuilder
           .speak(speechText)
           .reprompt(GENERAL_REPROMPT)
           .getResponse();
       })
       .catch((err) => {
-        console.log("Error occured while saving movie", err);
-        const speechText = "we cannot save your movie right now. Try again!"
+        console.log("Error occured while playing workout ${workout}", err);
+        const speechText = "we cannot play your workout video right now. Try again!"
         return responseBuilder
           .speak(speechText)
           .getResponse();
@@ -63,79 +71,117 @@ const AddMovieIntentHandler = {
   },
 };
 
-const GetMoviesIntentHandler = {
+const MorningRoutineIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'GetMoviesIntent';
+      && handlerInput.requestEnvelope.request.intent.name === 'MorningRoutineIntent';
   },
   async handle(handlerInput) {
     const {responseBuilder } = handlerInput;
-    const userID = handlerInput.requestEnvelope.context.System.user.userId; 
-    return dbHelper.getMovies(userID)
+    let command = " play"; 
+    return dbHelper.getMorningRoutine(command)
       .then((data) => {
-        var speechText = "Your movies are "
-        if (data.length == 0) {
-          speechText = "You do not have any favourite movie yet, add movie by saving add moviename "
-        } else {
-          speechText += data.map(e => e.movieTitle).join(", ")
-        }
+        const speechText = `Morning routine playing `;
         return responseBuilder
           .speak(speechText)
           .reprompt(GENERAL_REPROMPT)
           .getResponse();
       })
       .catch((err) => {
-        const speechText = "we cannot get your movie right now. Try again!"
+        console.log("Error occured while playing workout", err);
+        const speechText = "we cannot play your workout video right now. Try again!"
         return responseBuilder
           .speak(speechText)
           .getResponse();
       })
-  }
-}
-
-const InProgressRemoveMovieIntentHandler = {
-  canHandle(handlerInput) {
-    const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest' &&
-      request.intent.name === 'RemoveMovieIntent' &&
-      request.dialogState !== 'COMPLETED';
   },
-  handle(handlerInput) {
-    const currentIntent = handlerInput.requestEnvelope.request.intent;
-    return handlerInput.responseBuilder
-      .addDelegateDirective(currentIntent)
-      .getResponse();
-  }
-}
+};
 
-const RemoveMovieIntentHandler = {
+const PlayVideoIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'RemoveMovieIntent';
-  }, 
-  handle(handlerInput) {
+      && handlerInput.requestEnvelope.request.intent.name === 'PlayVideoIntent';
+  },
+  async handle(handlerInput) {
     const {responseBuilder } = handlerInput;
-    const userID = handlerInput.requestEnvelope.context.System.user.userId; 
     const slots = handlerInput.requestEnvelope.request.intent.slots;
-    const movieName = slots.MovieName.value;
-    return dbHelper.removeMovie(movieName, userID)
+    const workout = slots.WorkoutName.value;
+    let command = "play " + workout; 
+    return dbHelper.updateWorkoutCommand(command)
       .then((data) => {
-        const speechText = `You have removed movie with name ${movieName}, you can add another one by saying add`
+        const speechText = `Workout playing.`;
         return responseBuilder
           .speak(speechText)
           .reprompt(GENERAL_REPROMPT)
           .getResponse();
       })
       .catch((err) => {
-        const speechText = `You do not have movie with name ${movieName}, you can add it by saying add`
+        console.log("Error occured while playing workout ${workout}", err);
+        const speechText = "we cannot play your workout video right now. Try again!"
+        return responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+  },
+};
+
+
+const RestartVideoIntentHandler= {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'RestartVideoIntent';
+  },
+  async handle(handlerInput) {
+    const {responseBuilder } = handlerInput;
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const workout = slots.WorkoutName.value;
+    const command = "restart";
+    return dbHelper.updateWorkoutCommand(command)
+      .then((data) => {
+        const speechText = `Workout restarted.`;
         return responseBuilder
           .speak(speechText)
           .reprompt(GENERAL_REPROMPT)
           .getResponse();
       })
-  }
-}
+      .catch((err) => {
+        console.log("Error occured while restarting workout ${workout}", err);
+        const speechText = "we cannot restart your workout video right now. Try again!"
+        return responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+  },
+};
 
+const PauseVideoIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'PauseVideoIntent';
+  },
+  async handle(handlerInput) {
+    const {responseBuilder } = handlerInput;
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const workout = slots.WorkoutName.value;
+    const command = "pause";
+    return dbHelper.updateWorkoutCommand(command)
+      .then((data) => {
+        const speechText = `Workout paused.`;
+        return responseBuilder
+          .speak(speechText)
+          .reprompt(GENERAL_REPROMPT)
+          .getResponse();
+      })
+      .catch((err) => {
+        console.log("Error occured while pausing workout ${workout}", err);
+        const speechText = "we cannot pause your workout video right now. Try again!"
+        return responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+  },
+};
+ 
 const HelpIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -191,16 +237,28 @@ const ErrorHandler = {
   },
 };
 
+function supportsDisplay(handlerInput) {
+  const hasDisplay =
+    handlerInput.requestEnvelope.context &&
+    handlerInput.requestEnvelope.context.System &&
+    handlerInput.requestEnvelope.context.System.device &&
+    handlerInput.requestEnvelope.context.System.device.supportedInterfaces &&
+    handlerInput.requestEnvelope.context.System.device.supportedInterfaces.Display;
+  return hasDisplay;
+}
+
 const skillBuilder = Alexa.SkillBuilders.standard();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    InProgressAddMovieIntentHandler,
-    AddMovieIntentHandler,
-    GetMoviesIntentHandler,
-    InProgressRemoveMovieIntentHandler,
-    RemoveMovieIntentHandler,
+    InProgressPlayVideoIIntentHandler,
+    PlayVideoIntentHandler,
+    PauseVideoIntentHandler,
+    RestartVideoIntentHandler,
+    MorningRoutineIntentHandler,
+    SetMorningRoutineIntentHandler,
+    // WorkoutIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
