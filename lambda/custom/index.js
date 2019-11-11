@@ -53,7 +53,7 @@ const SetMorningRoutineIntentHandler = {
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const workout = slots.WorkoutName.value;
     let command = "morning routine " + workout; 
-    return dbHelper.updateWorkoutCommand(command)
+    return dbHelper.setMorningRoutine(command)
       .then((data) => {
         const speechText = `Morning routine set to ${workout}.`;
         return responseBuilder
@@ -78,8 +78,7 @@ const MorningRoutineIntentHandler = {
   },
   async handle(handlerInput) {
     const {responseBuilder } = handlerInput;
-    let command = " play"; 
-    return dbHelper.getMorningRoutine(command)
+    return dbHelper.getMorningRoutine()
       .then((data) => {
         const speechText = `Morning routine playing `;
         return responseBuilder

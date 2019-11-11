@@ -21,7 +21,7 @@
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "e8e24e7e4c6cac00a8c69c1c7f594043"
+            "eTag": "288bef2a2aa429cd181e4224e484279f"
           }
         },
         "lambda": [
@@ -34,7 +34,7 @@
             "codeUri": "lambda/custom",
             "functionName": "ask-custom-reflectMirror-default",
             "handler": "index.handler",
-            "revisionId": "49d330a8-960b-4193-b9b4-22277a06be6c",
+            "revisionId": "893a73aa-77dc-42d2-9f8a-6303bec22ed8",
             "runtime": "nodejs8.10"
           }
         ]

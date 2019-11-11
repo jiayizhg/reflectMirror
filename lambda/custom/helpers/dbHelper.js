@@ -29,16 +29,37 @@ dbHelper.prototype.updateWorkoutCommand = (command) => {
     });
 }
 
-dbHelper.prototype.getMorningRoutine = (command) => {
+dbHelper.prototype.getMorningRoutine = () => {
     return new Promise((resolve, reject) => {
         const params = {
             TableName: tableName,
             Key: {
                 "id": 0
             },
-            UpdateExpression: "set workoutCommands = workoutCommands + :play",
+            UpdateExpression: "set workoutCommands = morningRoutine",
+            ReturnValues:"UPDATED_NEW"
+        };
+        docClient.update(params, (err, data) => {
+            if (err) {
+                console.log("Unable to insert =>", JSON.stringify(err))
+                return reject("Unable to insert " + err);
+            }
+            console.log("Saved Data, ", JSON.stringify(data));
+            resolve(data);
+        });
+    });
+}
+
+dbHelper.prototype.setMorningRoutine = (command) => {
+    return new Promise((resolve, reject) => {
+        const params = {
+            TableName: tableName,
+            Key: {
+                "id": 0
+            },
+            UpdateExpression: "set morningRoutine = :newCommand",
             ExpressionAttributeValues:{
-                ":play":command
+                ":newCommand":command
             },
             ReturnValues:"UPDATED_NEW"
         };
