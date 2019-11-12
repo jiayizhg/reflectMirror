@@ -76,6 +76,25 @@
                     ]
                 },
                 {
+                    "name": "FastForwardVideoIntent",
+                    "slots": [
+                        {
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
+                            "samples": [
+                                "{WorkoutName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "fast forward {WorkoutName}",
+                        "fast forward {WorkoutName} video",
+                        "fast forward the {WorkoutName} video",
+                        "fast forward video",
+                        "fast forward"
+                    ]
+                },
+                {
                     "name": "AMAZON.NavigateHomeIntent",
                     "samples": []
                 },
@@ -121,6 +140,24 @@
                         {
                             "name": {
                                 "value": "Flow Workout"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Meditation"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Pilates"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Strength Training",
+                                "synonyms": [
+                                    "Strength with Weights"
+                                ]
                             }
                         }
                     ]
