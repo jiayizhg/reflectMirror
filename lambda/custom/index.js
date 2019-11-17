@@ -153,6 +153,32 @@ const RestartVideoIntentHandler= {
   },
 };
 
+const FastForwardVideoIntentHandler= {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'FastForwardVideoIntent';
+  },
+  async handle(handlerInput) {
+    const {responseBuilder } = handlerInput;
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const workout = slots.WorkoutName.value;
+    const command = "fast forward";
+    return dbHelper.updateWorkoutCommand(command)
+      .then((data) => {
+        return responseBuilder
+          .reprompt(GENERAL_REPROMPT)
+          .getResponse();
+      })
+      .catch((err) => {
+        console.log("Error occured while fast forwarding workout ${workout}", err);
+        const speechText = "we cannot fast forward your workout video right now. Try again!"
+        return responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+  },
+};
+
 const PauseVideoIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -285,7 +311,7 @@ exports.handler = skillBuilder
     RestartVideoIntentHandler,
     MorningRoutineIntentHandler,
     SetMorningRoutineIntentHandler,
-    // WorkoutIntentHandler,
+    FastForwardVideoIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
