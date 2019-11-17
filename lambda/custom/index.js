@@ -52,7 +52,7 @@ const SetMorningRoutineIntentHandler = {
     const {responseBuilder } = handlerInput;
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const workout = slots.WorkoutName.value;
-    let command = "morning routine " + workout; 
+    let command = "morning routine " + workout;
     return dbHelper.setMorningRoutine(command)
       .then((data) => {
         const speechText = `Morning routine set to ${workout}.`;
@@ -105,7 +105,7 @@ const PlayVideoIntentHandler = {
     const {responseBuilder } = handlerInput;
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const workout = slots.WorkoutName.value;
-    let command = "play " + workout; 
+    let command = "play " + workout;
     return dbHelper.updateWorkoutCommand(command)
       .then((data) => {
         const speechText = `Workout playing.`;
@@ -180,7 +180,35 @@ const PauseVideoIntentHandler = {
       })
   },
 };
- 
+
+const StopVideoIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'StopVideoIntent';
+  },
+  async handle(handlerInput) {
+    const {responseBuilder } = handlerInput;
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const workout = slots.WorkoutName.value;
+    const command = "stop workout";
+    return dbHelper.updateWorkoutCommand(command)
+      .then((data) => {
+        const speechText = `Workout stopped.`;
+        return responseBuilder
+          .speak(speechText)
+          .reprompt(GENERAL_REPROMPT)
+          .getResponse();
+      })
+      .catch((err) => {
+        console.log("Error occured while stoping workout ${workout}", err);
+        const speechText = "we cannot stop your workout video right now. Try again!"
+        return responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+  },
+};
+
 const HelpIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
