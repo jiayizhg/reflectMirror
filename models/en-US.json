@@ -24,9 +24,15 @@
                             "samples": [
                                 "{WorkoutName}"
                             ]
+                        },
+                        {
+                            "name": "TrainerName",
+                            "type": "trainerNames"
                         }
                     ],
                     "samples": [
+                        "play {WorkoutName} workout",
+                        "play {WorkoutName} by {TrainerName}",
                         "play {WorkoutName}",
                         "play {WorkoutName} video",
                         "play the {WorkoutName} video",
@@ -50,10 +56,27 @@
                         "pause {WorkoutName} video",
                         "pause the {WorkoutName} video",
                         "pause video",
-                        "pause",
-                        "stop the video",
+                        "pause"
+                    ]
+                },
+                {
+                    "name": "StopVideoIntent",
+                    "slots": [
+                        {
+                            "name": "WorkoutName",
+                            "type": "workoutVideo",
+                            "samples": [
+                                "{WorkoutName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "stop {WorkoutName}",
+                        "stop {WorkoutName} video",
+                        "stop the {WorkoutName} video",
                         "stop video",
-                        "stop fast forward"
+                        "stop the video",
+                        "stop the workout"
                     ]
                 },
                 {
@@ -112,9 +135,15 @@
                         {
                             "name": "WorkoutName",
                             "type": "workoutVideo"
+                        },
+                        {
+                            "name": "TrainerName",
+                            "type": "trainerNames"
                         }
                     ],
                     "samples": [
+                        "Set my morning routine to {WorkoutName} by {TrainerName}",
+                        "Set morning routine to {WorkoutName} by {TrainerName}",
                         "Set morning routine to {WorkoutName}",
                         "Set my morning routine to {WorkoutName}"
                     ]
@@ -124,6 +153,31 @@
                 {
                     "name": "workoutVideo",
                     "values": [
+                        {
+                            "name": {
+                                "value": "Ten minute strength",
+                                "synonyms": [
+                                    "10 minutes shrimp",
+                                    "10 minute strength  ",
+                                    "10 minutes from",
+                                    "10 minute street"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Arms and Abs"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Stretches",
+                                "synonyms": [
+                                    "KTX Stretches",
+                                    "KTXStretches"
+                                ]
+                            }
+                        },
                         {
                             "name": {
                                 "value": "Kick Boxing",
@@ -161,6 +215,46 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "trainerNames",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Keith"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Christy"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Ginny"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jaime"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Amber"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Teresa"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Jenny"
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -179,6 +273,13 @@
                             "prompts": {
                                 "elicitation": "Elicit.Slot.932310416052.1004645578092"
                             }
+                        },
+                        {
+                            "name": "TrainerName",
+                            "type": "trainerNames",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
                         }
                     ]
                 }

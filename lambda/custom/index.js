@@ -105,6 +105,10 @@ const PlayVideoIntentHandler = {
     const {responseBuilder } = handlerInput;
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const workout = slots.WorkoutName.value;
+    const trainerName = slots.TrainerName.value;
+    if (workout.includes("shrimp") || workout.includes("street") || workout.includes("street")) {
+      workout = "10 minute strength";
+    }
     let command = "play " + workout;
     return dbHelper.updateWorkoutCommand(command)
       .then((data) => {
@@ -313,6 +317,7 @@ exports.handler = skillBuilder
     SetMorningRoutineIntentHandler,
     FastForwardVideoIntentHandler,
     HelpIntentHandler,
+    StopVideoIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
   )

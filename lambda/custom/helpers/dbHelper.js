@@ -74,4 +74,23 @@ dbHelper.prototype.setMorningRoutine = (command) => {
     });
 }
 
+dbHelper.prototype.getTrainerName = (TrainerNames) => {
+    return new Promise((resolve, reject) => {
+        const params = {
+            TableName: "TrainersTable",
+            Key: {
+                "TrainerNames": TrainerNames
+            },
+        };
+        docClient.get(params, (err, data) => {
+            if (err) {
+                console.log("Unable to get =>", JSON.stringify(err))
+                return reject("Unable to get " + err);
+            }
+            console.log("Got Data, ", JSON.stringify(data));
+            resolve(data);
+        });
+    });
+}
+
 module.exports = new dbHelper();
