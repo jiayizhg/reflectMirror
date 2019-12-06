@@ -2,8 +2,6 @@
 
 1. [ Quick Start ](#QuickStart)
 2. [ Architecture Diagram ](#ArchitectureDiagram)
-3. [ API WRITEUP ](#ApiWriteup)
-4. [ App Info ](#AppInfo)
 
 ---
 
@@ -23,6 +21,8 @@ https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-lin
 ---
 <a name="ArchitectureDiagram"></a>
 ## Architecture Diagram
+<img src="ArchitectureDiagram.png" width="15000" height="180">
+
 1. Build the Alexa Interaction Model (the front-end).
 2. Build the back-end functionality using a Node.js Lambda function. Point the front-end to the back-end.
 3. Set up a database that will store information the user speaks to Alexa.
