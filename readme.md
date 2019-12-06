@@ -14,6 +14,9 @@ npm install -g ask-cli
 
 # Deploy the skill to the developer account
 ask deploy
+
+# Clone the skill from the development stage to the local directory
+ask clone -s amzn1.ask.skill.49176bf2-0d6e-48fd-a55f-eefe415e6b4d
 ```
 For more information, please refer to
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
@@ -30,4 +33,3 @@ https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-lin
 5. Create a lambda function that reads from the database.
 6. Set up an API that will access the lambda function and return the value of the function retrieved from the database.
 7. This mirror will access the API to determine which information to show. Every time the user asks for new information, the mirror will be updated.
----
